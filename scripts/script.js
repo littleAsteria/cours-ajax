@@ -4,8 +4,7 @@ $(function(){//lance le code seulement lorsque le html est pret
 
 		//On récupére l'ur ld'image (copier l'adresse de l'image)
 		let images =['http://static.boredpanda.com/blog/wp-content/uploads/2015/07/panda-daycare-nursery-chengdu-research-base-breeding-8.jpg',
-		'http://md1.libe.com/photo/548972-deux-pandas-geants-mangent-du-bambou-dans-le-centre-bifengxia-en-chine-le-20-avril-2013.jpg',
-		'http://www.seriousfacts.com/wp-content/uploads/2017/03/panda-sleeping.jpg'];
+		'http://md1.libe.com/photo/548972-deux-pandas-geants-mangent-du-bambou-dans-le-centre-bifengxia-en-chine-le-20-avril-2013.jpg'];
 		let index =0;//index commence à 0
 
 		setInterval(function(){
