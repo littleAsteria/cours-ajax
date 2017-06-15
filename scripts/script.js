@@ -1,7 +1,13 @@
+
+//---------------------------Appel de jquery---------------------------------------------------------------
+
 $(function(){//lance le code seulement lorsque le html est pret
 
-		//console.log('ouille!'); on verifie si on est bien connecter au jquery
+		//console.log('ouille!'); on verifie si on reçoit le jquery
 
+
+//-----------------------------------------CAROUSSEL----------------------------------------------------------------------------
+		
 		//On récupére l'ur ld'image (copier l'adresse de l'image)
 		let images =['http://static.boredpanda.com/blog/wp-content/uploads/2015/07/panda-daycare-nursery-chengdu-research-base-breeding-8.jpg',
 		'http://md1.libe.com/photo/548972-deux-pandas-geants-mangent-du-bambou-dans-le-centre-bifengxia-en-chine-le-20-avril-2013.jpg'];
@@ -22,7 +28,48 @@ $(function(){//lance le code seulement lorsque le html est pret
 
 		},3000);//toutes les 3 secondes
 
-	
 
+
+//----------------------------------------AJAX et GET----------------------------------------
+	/*Consigne: on veut remplacer le contenu des li par une liste de noms d'utilisateurs présent sur une page web	*/
+
+		//D'abord on fait une requete ajax permettant de récupérer l'url des tableau
+
+		let request = $.ajax({
+
+  				url: "https://jsonplaceholder.typicode.com/users",
+  				//url du tableau
+
+  				method: "GET",
+  				//il faut utiliser GET car il ne s'agit pas d'un envoi de données
+
+  				//data:{id:}, pas besoin de data pour 1 GET car on veut tous les utilisateurs et peut juste un id
+
+  				dataType: "json" //optionnel
+
+		});
+ 
+		request.done(function(data) {// ce qui se trouve entre les parenthéses de la fonction c'est ce que nous renvoie le serveur (ici le tableau des utilisateurs peu importe le nom )
+					
+					let content="";// On créé un contenu vide auquel on ajoutera des valeurs (conf.boutique-php)
+					
+					data.forEach(function(element){//parcourt toutes les cases des tableaux
+					//ce qui se trouve entre les parenthéses de la fonction correspond aux elements récupérés dans le tableau
+						content +='<li><a href="#">' + element.name +'</a><li>';
+						//on ne veut que les noms (on associe element à l'indice nom du tableau pour ne récupérer que les noms)
+					});
+					//on efface le code html précédent car il pourrait avoir plus d'utilisateur que de li
+					//A la place on ajoute au "content" une nouvelle valeur correspondand aux noms des utilisateurs
+
+					$("#right_column ul").html(content);//balise aside regroupant les li, on remplace le contenu  par le contenu du content
+				
+		});
+ 
+		request.fail(function( jqXHR, textStatus ) {
+  				alert( "Request failed: " + textStatus );
+		});
+
+		
+	
 		
 });
