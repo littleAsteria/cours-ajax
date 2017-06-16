@@ -55,7 +55,7 @@ $(function(){//lance le code seulement lorsque le html est pret
 
 					data.forEach(function(element){//parcourt toutes les cases des tableaux
 					//ce qui se trouve entre les parenthéses de la fonction correspond aux elements récupérés dans le tableau
-						content +='<li id="Mike'+ element.id+'"><a href="#">' + element.name +'</a><li>';
+						content +='<li id="User-'+ element.id+'"><a href="#">' + element.name +'</a><li>';
 						//on ne veut que les noms (on associe element à l'indice nom du tableau pour ne récupérer que les noms)
 						//on ajoute un id à li pour la suite de l'exercice
 					});
