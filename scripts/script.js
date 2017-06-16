@@ -162,7 +162,7 @@ $(function(){//lance le code seulement lorsque le html est pret
  					$('.more > a').eq(i).on("click",function(e){
  						e.preventDefault();
  						
- 						//avant le console.log('coucou'); en vérifiant on comprend que cela affiche coucou lorsquon clique sur read less donc on est  toujours dans l'evenement du dessus
+ 						//avant le   console.log('coucou'); en vérifiant on comprend que cela affiche coucou lorsquon clique sur read less donc on est  toujours dans l'evenement du dessus
  						if($(this).text() != 'Read less'){//on cible le a qu'on a cliqué avec this
 
  							$(".jsDescription").eq(i).text(dataPosts[i].body);
@@ -212,5 +212,91 @@ $(function(){//lance le code seulement lorsque le html est pret
 				*/
 
 
+//----------------------exercice:
+/* On veut remplacer les 3 photos de ul clear et ensuite 
+à chaque fois qu' on cliquera sur le read all, on veut  afficher 10 photos (3+7 la premiére fois) puis (10 à chaque clic)*/
+			
+			//exo sonia (pas bon voir correction plus bas)
+			/*$.ajax({
+				url:'https://jsonplaceholder.typicode.com/photos',
+				method:'GET',
+				dataType:'json'
+			})
+
+			.done(function(postPhoto){
+				//console.log(postPhoto);
+				
+				$('#latest figcaption a').on('click',function(e){
+					e.preventDefault();
+
+					//for (let i = 0; i < 10; i++) {
+						//boucle s'arrete à 10
+						
+						$('.clear img').attr("src",postPhoto[i].url);
+						console.log(postPhoto.url);
+					//}
+				
+				});
+
+			})
+
+			.fail(function(jqXHR, textStatus){
+				"Request failed: " + textStatus;
+			});*/
+//-------------------------------------------------------------------------------
+			//correction:
+
+			let increment = 0;// on créé une variable globale qui nous servira pour effectuer la condition
+			let pictures;// variable globale sans valeur 
+			//nouvelle syntaxe ajax:
+			$.get("https://jsonplaceholder.typicode.com/photos")//méthode get ou post et ensuite ('url')
+			.done(function(data){
+				//console.log(data);
+			/*on a bien récupéré les 5000 images contenu sur la page récupéré par l'url
+			mais on ne veut qu'afficher 3 photos qui prendront les places des anciennes*/
+
+				for(let a = 0; a < 3; a++)
+				//on effectue une boucle pour récupérer les 3 premiéres photos
+					$(".one_third").eq(a).children().attr('src',data[a].url);//
+					pictures = data;
+					//on ajoute la valeur data à la variable créé ci-dessus
+					//grace à la variable pictures qui globale, on peut accéder aux données de data partout
+			});
+
+			/*on créé mtn un event jquery lorqu'on clique sur "a"(view all Our recent....) 
+			on veut afficher 10 nouvelles photos*/
+			$("figcaption > a").click(function(e){
+
+				e.preventDefault();
+				//console.log('hi');on teste que l'event du click fonctionne
+
+				let content="";//on créé 1 chaine vide pour concaténer les dix images d'un coup
+				let indexLi = $(".one_third").length;
+				/*on récupére veut la taille le nombre des li dans le ul*/
+
+				//console.log(pictures);
+
+					/*Lors du premier click, la valeur increment est égale à 0 (let i = increment), 
+					tant que i est inférieur 10, la boucle incrémente (regarder console.log(i))
+					 */
+
+					for (let i = increment; i < increment+10; i++){
+						//console.log(i); 
+						let classHtml = "";
+						if((indexLi+1)%3 ===0)//(si le chiffre est un multiple de 3, la class last box est prise ne compte)
+							classHtml = "lastbox";
+						content +='<li class="one_third"><img src="'+pictures[i].url+'" width="290" height="180" alt=""></li>';//on met l'url dans la source de l'image
+
+					}
+
+					$(".clear").append(content);
+
+					increment += 10;
+					/*aprés le 1er click, incrémentera de 10 à chaque autre click*/
+					
+
+
+		
+			})
 
 });
