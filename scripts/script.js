@@ -125,15 +125,92 @@ $(function(){//lance le code seulement lorsque le html est pret
 		});
  
 		request.fail(function( jqXHR, textStatus ) {
+		//jqXHR header de la requete (contient les informations de la requete)
+		//textStatut de la requete (ex: 304 ou texte)
+		//errorThrown gestion des erreurs (on ne le met pas)
   				alert( "Request failed: " + textStatus );
+
 		});
 
-//-------------------------------Console info----------------------------------
-// faire un console.info de username et email de chaque utilisateur lorsqu'on clique sur un li
-		
+//--------------------------------exercice 3--------------------------------------------------------
+		//changer les quatres contenus par le contenu du titre et la description d'une autre page
+		//récupérer les données en 1er:
 
-		
+		//-------------------correction Mike:
+ 			$.ajax({
+				url:"https://jsonplaceholder.typicode.com/posts",
+ 				method:'GET',
+ 				dataType:'json'
+ 			})
+ 			.done(function(dataPosts){
+ 				console.log(dataPosts);
+ 				//On fait 1 boucle pour récupérer les 4 premiers titres des données
+ 				for (let i = 0; i < 4; i++) {
+ 					//console.log($(".one_quarter > strong").eq(i).text(dataPosts[i].title));
+ 					$(".one_quarter > strong").eq(i).text(dataPosts[i].title);
+ 					//un id recupére un seul element (1 objet par un tableau)
+ 					//une classe récupére les elements (en un tableau)
+ 					//On parcourt un tableau en jquery avec la fonction eq() (comme avec les crochets pour un indice)
+ 					//à chaque iteration  
+ 					//dataPosts[i].body.slice(0,97)+"...";
+ 					$(".jsDescription").eq(i).text(dataPosts[i].body.slice(0,97)+"...");
+ 					//La méthode slice permet de couper une chaine de caractéres
+//event read more--------------------------------------------------------------------------------------------
+ 					/*Il faut mettre l'évenement dans done car sinon il n'existe pas. c'est là aussi que se trouve la fonction 
+ 					si on est en dehors de la fonction, il ne peut pas comprendre ce qu'est dataPost 
+ 					et ne pas oublier de mettre l'event dans dans la boucle*/
+ 					$('.more > a').eq(i).on("click",function(e){
+ 						e.preventDefault();
+ 						
+ 						//avant le console.log('coucou'); en vérifiant on comprend que cela affiche coucou lorsquon clique sur read less donc on est  toujours dans l'evenement du dessus
+ 						if($(this).text() != 'Read less'){//on cible le a qu'on a cliqué avec this
+
+ 							$(".jsDescription").eq(i).text(dataPosts[i].body);
+ 							$(this).text('Read less');
+ 						}
+
+ 						else{
+
+ 							$(".jsDescription").eq(i).text(dataPosts[i].body.slice(0,97)+"...");
+ 							$(this).text("Read more");
+ 						}
+
+ 						
+
+ 					});
+ 				}
+ 			}) 
+ 			//le point de done doit etre directement relié à la parenthéses de la methode ajax (ne pas mettre de variable)
+ 			.fail(function(jqXHR, textStatus){
+ 				alert("Request failed: " + textStatus);
+ 			});
+ 			
 
 
-	
+ 			//-----------------------exo sonia:
+ 			/*console.log(requete3);
+
+ 			requete3.done(function(donnee){
+
+ 				let contenu = '';
+ 				
+ 				for (let i = 0; i < 4; i++){
+
+ 					contenu += '<strong>' + donnee[i].title+ '</strong>';
+
+ 					$(".one_quarter").eq(i).html(contenu);
+
+ 					}
+
+
+ 				console.log(contenu);
+ 			
+ 				});
+
+ 				
+ 			});
+				*/
+
+
+
 });
