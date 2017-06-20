@@ -14,7 +14,9 @@ $(function(){//lance le code seulement lorsque le html est pret
 		let index =0;//index commence à 0
 
 		setInterval(function(){
-		
+		//différence avec setInterval et setTimeout
+		//toutes les 3 secondes
+		//setTimeout au bout de 3 secondes
 
 
 			if(index == images.length)//taille des 3 images
@@ -35,10 +37,12 @@ $(function(){//lance le code seulement lorsque le html est pret
 
 		//D'abord on fait une requete ajax permettant de récupérer l'url des tableau
 
-		let request = $.ajax({
+		let request = $.ajax({ //url et methode sont obligatoires (normes)
 
-  				url: "https://jsonplaceholder.typicode.com/users",
+  				//url: "http://jsonplaceholder.typicode.com/users",
   				//url du tableau
+
+  				url:"http://localhost/GitHub/cours-ajax/api.php",//on change l'url pour recupérer la bdd
 
   				method: "GET",
   				//il faut utiliser GET car il ne s'agit pas d'un envoi de données
@@ -48,16 +52,19 @@ $(function(){//lance le code seulement lorsque le html est pret
   				dataType: "json" //optionnel
 
 		});
- 
+ 	//si la requete est bien passé on va dans le done(success). Cr'est ce qu'on récupére du serveur 
 		request.done(function(data) {// ce qui se trouve entre les parenthéses de la fonction c'est ce que nous renvoie le serveur (ici le tableau des utilisateurs peu importe le nom )
 					
 					let content="";// On créé un contenu vide auquel on ajoutera des valeurs (conf.boutique-php)
 
 					data.forEach(function(element){//parcourt toutes les cases des tableaux
+					//data est un array:  on met le tableau devant un point et la boucle forEach
 					//ce qui se trouve entre les parenthéses de la fonction correspond aux elements récupérés dans le tableau
-						content +='<li id="User-'+ element.id+'"><a href="#">' + element.name +'</a><li>';
+						content +='<li id="User-'+ element.id+'"><a href="#">' + element.fistname +' '+element.lastname+'</a><li>';
 						//on ne veut que les noms (on associe element à l'indice nom du tableau pour ne récupérer que les noms)
 						//on ajoute un id à li pour la suite de l'exercice
+
+
 					});
 					//on efface le code html précédent car il pourrait avoir plus d'utilisateur que de li
 					//A la place on ajoute au "content" une nouvelle valeur correspondand aux noms des utilisateurs
@@ -72,21 +79,39 @@ $(function(){//lance le code seulement lorsque le html est pret
 						e.preventDefault();
 
 						/*recupération de l'id : */
-						let idUser = $(this).attr("id");// on change l'id mike en idUser
-						console.log(idUser.split("-"));//on ajoute un tiret pour chaque id User-3 = array("User","3") 
+						let idUser = $(this).attr("id");//on récupére l'id de l'user sur lequel on clique
+						console.log(idUser.split("-"));
+						/*on le coupe en deux au niveau du tiret pour récupérer un tableau qui contient en index 0 
+						ce quil y a avant le tiret et en index 1 ce qui'l y a apres le tiret*/ 
 						//split coupe par rapport au caractére '-' 
 						idUser= idUser.split("-");
 
 							let ficheUser = $.ajax({
-								url:"https://jsonplaceholder.typicode.com/users",
+								url:"http://localhost/GitHub/cours-ajax/api.php",//on a changé le lien de base
 								method: "GET",
-								data: {id : idUser[1]},
+								data: {id : idUser[1]},//2éme partie de l'index découpé
 								dataType : "json"//option
 							});
 
 						ficheUser.done(function(dataUser){
 
-							console.info(dataUser[0].username+" "+dataUser[0].email);
+							console.info(dataUser[0].fistname+" "+dataUser[0].lastname);//lorqu'on clique sur un user (affiche dans la console le prenom et le nom de l'utilisateur en question)
+							//console.log(dataUser);
+							$("#prenom").val(dataUser[0].fistname);
+							$("#nom").val(dataUser[0].lastname);
+							$("#date_naiss").val(dataUser[0].date_naiss);
+							$("#id").val(dataUser[0].id);
+
+							let select = [];
+							select["CEO"] = 0;
+							select["CTO"] = 1;
+							select["SEO"] = 2;
+
+							//$("#poste option[value="+dataUser[0].poste+"]").attr("selected","selected");
+							$("#poste option:eq("+select[dataUser[0].poste]+")").attr("selected","selected");//selected se place automatiquement lors du click
+
+
+
 
 						});
 
@@ -283,9 +308,10 @@ $(function(){//lance le code seulement lorsque le html est pret
 					for (let i = increment; i < increment+10; i++){
 						//console.log(i); 
 						let classHtml = "";
-						if((indexLi+1)%3 ===0)//(si le chiffre est un multiple de 3, la class last box est prise ne compte)
+						if((indexLi+1)%3 === 0)//(si le chiffre est un multiple de 3, la class last box est prise ne compte)
 							classHtml = "lastbox";
 						content +='<li class="one_third"><img src="'+pictures[i].url+'" width="290" height="180" alt=""></li>';//on met l'url dans la source de l'image
+
 
 					}
 
@@ -298,7 +324,8 @@ $(function(){//lance le code seulement lorsque le html est pret
 
 		
 			})
-
+//--------------------recupérer les données du formulaire------------------------------------------------
+//exo sonia
 			/*$(".form-horizontal").submit(function(e){
 				e.preventDefault();
 				fistname = $(this).find("input[name=fistname").val();
@@ -313,7 +340,7 @@ $(function(){//lance le code seulement lorsque le html est pret
 
 			});
 			*/
-
+//correction
 			$(".form-horizontal").submit(function(e){
 				e.preventDefault();//on ne veut pas etre envoyer sur 1 autre page ou quelle se recharge 
 				$.ajax({
@@ -334,5 +361,60 @@ $(function(){//lance le code seulement lorsque le html est pret
 				});
 
 			});
+//-------------------------------DELETE ID------------------------------------------------------------------------
+
+			$("#deleteUser").click(function(e){
+				e.preventDefault();
+				console.log("mike");
+				$.ajax({
+					url:"http://localhost/GitHub/cours-ajax/api.php",//mettre tout l'url
+					method:"POST",//le code de la page est en post, la methode doit donc etre en POST
+					data: {id: $("#id").val()}//ce qu'on envoie dans $_POST
+					/*serialize permet de récupérer tous les input est en les transformant 
+					en chaine de caractére en un format url (syntaxe de get)*/
+				})
+				.done(function(dataPosts){
+					$("#message_ajax").html("<div class='alert alert-success'><strong>Success!</strong>Use register</div>");
+					console.log("User register");
+				})
+				.fail(function(jqXHR, textStatus){
+					$("#message_ajax").html("<div class='alert alert-danger'><strong>Error!</strong>Use register</div>");
+					//console.log("User register");
+					console.log("User not register");
+				});
+			});
 			
 });
+
+
+
+
+/*Différence entre let et var
+//Avec let:
+$(function(){
+	let images ="toto.png";
+	if(true){
+		let images="tata.png";//varaible locale
+	}
+	console.log(images);
+	// Avec let, la valeur de la console est toto car la valeur de la variable dans le if ne sera pas pris ene compte
+
+
+});
+
+//Avec var
+
+var images ="toto.png";
+	if(true){
+		var images="tata.png";//varaible locale
+	}
+	console.log(images);
+	// Avec var, la valeur de la console est tata car la valeur de la variable dans le if est pris en compte
+
+
+});
+
+
+
+
+*/
