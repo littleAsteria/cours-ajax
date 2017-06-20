@@ -143,7 +143,7 @@ $(function(){//lance le code seulement lorsque le html est pret
  				dataType:'json'
  			})
  			.done(function(dataPosts){
- 				console.log(dataPosts);
+ 				//console.log(dataPosts);
  				//On fait 1 boucle pour récupérer les 4 premiers titres des données
  				for (let i = 0; i < 4; i++) {
  					//console.log($(".one_quarter > strong").eq(i).text(dataPosts[i].title));
@@ -299,4 +299,40 @@ $(function(){//lance le code seulement lorsque le html est pret
 		
 			})
 
+			/*$(".form-horizontal").submit(function(e){
+				e.preventDefault();
+				fistname = $(this).find("input[name=fistname").val();
+				lastname = $(this).find("input[name=lastname]").val();
+				date_naissance = $(this).find("input[name=date_naiss]").val();
+				poste = $('#poste').val();
+
+			$.post("api.php",{fistname:fistname,lastname:lastname,date_naiss:date_naiss},function(data){
+				alert(data);
+			});
+
+
+			});
+			*/
+
+			$(".form-horizontal").submit(function(e){
+				e.preventDefault();//on ne veut pas etre envoyer sur 1 autre page ou quelle se recharge 
+				$.ajax({
+					url:"http://localhost/GitHub/cours-ajax/api.php",//mettre tout l'url
+					method:"POST",//le code de la page est en post, la methode doit donc etre en POST
+					data: $(".form-horizontal").serialize()//ce qu'on envoie dans $_POST
+					/*serialize permet de récupérer tous les input est en les transformant 
+					en chaine de caractére en un format url (syntaxe de get)*/
+				})
+				.done(function(dataPosts){
+					$("#message_ajax").html("<div class='alert alert-success'><strong>Success!</strong>Use register</div>");
+					console.log("User register");
+				})
+				.fail(function(jqXHR, textStatus){
+					$("#message_ajax").html("<div class='alert alert-danger'><strong>Error!</strong>Use register</div>");
+					//console.log("User register");
+					console.log("User not register");
+				});
+
+			});
+			
 });
